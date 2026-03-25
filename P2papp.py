@@ -8,15 +8,15 @@ def obtener_p2p_alto():
     st.cache_data.clear()
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
-    # SOLO CAMBIAMOS "SELL" por "BUY" para ver el precio más alto
+    # SOLO CAMBIAMOS "BUY" por "SELL" para ver el precio más alto
     payload = {
         "asset": "USDT",
         "fiat": "VES",
-        "tradeType": "BUY", 
+        "tradeType": "SELL", 
         "bank": ["Banesco"],
         "rows": 1,
         "page": 1,
-        "publisherType": None
+        "publisherType":"merchant"
     }
 
     try:
@@ -41,11 +41,11 @@ if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
     st.error(precio_alto)
 else:
     st.balloons()
-    st.success(f"### 🔥 PRECIO ALTO (BUY): {precio_alto} Bs.")
+    st.success(f"### 🔥 PRECIO ALTO (SELL): {precio_alto} Bs.")
     # Esto sigue siendo lo que lee tu otra app
     st.code(f"VALOR_REAL|{precio_alto}|")
 
-st.info("Ahora estás viendo la tasa de 'Compra', que siempre es un poco más alta que la de 'Venta'.")
+st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
 # Al final de tu código de Python en GitHub:
 with open("tasa.txt", "w") as f:
     f.write(str(precio_alto))

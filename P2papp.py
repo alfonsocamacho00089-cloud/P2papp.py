@@ -5,6 +5,7 @@ st.set_page_config(page_title="TuPropina P2P - Alto", page_icon="📡")
 st.title("📡 Antena Binance P2P (Precio Alto)")
 
 def obtener_p2p_alto():
+    st.cache_data.clear()
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
     # SOLO CAMBIAMOS "SELL" por "BUY" para ver el precio más alto

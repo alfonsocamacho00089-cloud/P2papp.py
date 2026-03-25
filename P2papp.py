@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-
+import datetime
 st.set_page_config(page_title="TuPropina P2P - Alto", page_icon="📡")
 st.title("📡 Antena Binance P2P (Precio Alto)")
 
@@ -50,3 +50,4 @@ with open("tasa.txt", "w") as f:
     f.write(str(precio_alto))
 
 st.success(f"Tasa guardada en GitHub: {precio_alto}")
+st.write(f"🕒 **Última actualización:** {hora_actual}")

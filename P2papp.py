@@ -33,5 +33,3 @@ else:
 # Auto-refresco cada 2horas 
 time.sleep(120)
 st.rerun()
-
-Solo quito el final y agrego eso que pudiste 

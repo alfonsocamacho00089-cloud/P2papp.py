@@ -15,7 +15,7 @@ def obtener_p2p_alto():
         "bank": ["Banesco"],
         "rows": 1,
         "page": 1,
-        "publisherType": "merchant"
+        "publisherType": None
     }
 
     try:

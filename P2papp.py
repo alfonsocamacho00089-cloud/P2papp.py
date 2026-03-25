@@ -1,33 +1,37 @@
 import streamlit as st
 import requests
+import time
 
-st.set_page_config(page_title="TuPropina v3", page_icon="📡")
-st.title("📡 Antena de Emergencia v3")
-
-def obtener_todo():
-    url = "https://api.alcambio.app/public"
+def obtener_p2p_real():
+    # Usamos el API de Binance Directo (desde el servidor de Streamlit no se bloquea)
+    url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
+    payload = {
+        "asset": "USDT",
+        "fiat": "VES",
+        "merchantCheck": True,
+        "rows": 1,
+        "tradeType": "BUY"
+    }
     try:
-        response = requests.get(url, timeout=15)
-        data = response.json()
-        # Si 'data' existe, la usamos; si no, usamos el json completo
-        return data.get('data', data)
-    except Exception as e:
-        return f"Error: {e}"
+        res = requests.post(url, json=payload, timeout=5)
+        data = res.json()
+        return data['data'][0]['adv']['price']
+    except:
+        return None
 
-items = obtener_todo()
+st.title("📡 Antena de Precios Real-Time")
 
-if isinstance(items, list):
-    st.success("✅ ¡Señal recuperada! Datos encontrados:")
-    for x in items:
-        # Mostramos TODO lo que encontremos para ver dónde está el precio
-        nombre = x.get('name', 'Sin nombre')
-        precio = x.get('price', 'Sin precio')
-        st.write(f"**{nombre}**: {precio} Bs.")
-        
-        # Guardamos el de Binance para tu otra app
-        if "Binance" in nombre:
-            st.write(f"VALOR_REAL|{precio}|")
+tasa = obtener_p2p_real()
+
+if tasa:
+    st.metric(label="Binance P2P Real", value=f"{tasa} Bs")
+    # Esto es para que tu HTML pueda leer el dato
+    st.write(f"VALOR_REAL|{tasa}|") 
 else:
-    st.error(f"⚠️ Seguimos sin ver los datos. Detalle: {items}")
+    st.error("Error de conexión con Binance")
 
-st.info("Esta versión muestra todo lo que AlCambio tiene disponible ahorita.")
+# Auto-refresco cada 2horas 
+time.sleep(120)
+st.rerun()
+
+Solo quito el final y agrego eso que pudiste 

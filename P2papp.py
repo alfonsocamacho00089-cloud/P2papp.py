@@ -1,25 +1,24 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="TuPropina P2P", page_icon="📡")
-st.title("📡 Antena Binance P2P (Rescate)")
+st.set_page_config(page_title="TuPropina P2P - Alto", page_icon="📡")
+st.title("📡 Antena Binance P2P (Precio Alto)")
 
-def obtener_p2p_directo():
-    # Usamos un proxy/mirror que suele estar libre de bloqueos
+def obtener_p2p_alto():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
+    # SOLO CAMBIAMOS "BUY" por "SELL" para ver el precio más alto
     payload = {
         "asset": "USDT",
         "fiat": "VES",
-        "tradeType": "BUY",
-        "bank": ["Banesco"], # Filtramos por Banesco que es el más estable
+        "tradeType": "SELL", 
+        "bank": ["Banesco"],
         "rows": 1,
         "page": 1,
         "publisherType": "merchant"
     }
 
     try:
-        # Aquí está el truco: simulamos ser un navegador real muy específico
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Content-Type": "application/json"
@@ -31,21 +30,18 @@ def obtener_p2p_directo():
             res_json = response.json()
             precio = res_json['data'][0]['adv']['price']
             return precio
-        else:
-            return f"Error de Binance: {response.status_code}"
+        return f"Error: {response.status_code}"
     except Exception as e:
         return f"Sin señal: {e}"
 
-# Ejecutar la antena
-precio_actual = obtener_p2p_directo()
+precio_alto = obtener_p2p_alto()
 
-if "Sin señal" in str(precio_actual) or "Error" in str(precio_actual):
-    st.error(f"⚠️ La antena sigue bloqueada: {precio_actual}")
-    st.info("Binance ha bloqueado la IP de este servidor por hoy.")
+if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
+    st.error(precio_alto)
 else:
     st.balloons()
-    st.success(f"### 🔥 PRECIO BINANCE P2P: {precio_actual} Bs.")
-    # Formato para tu otra app
-    st.code(f"VALOR_REAL|{precio_actual}|")
+    st.success(f"### 🔥 PRECIO ALTO (SELL): {precio_alto} Bs.")
+    # Esto sigue siendo lo que lee tu otra app
+    st.code(f"VALOR_REAL|{precio_alto}|")
 
-st.info("Si sale error, es que Binance detectó el servidor de Streamlit y le cerró la puerta.")
+st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")

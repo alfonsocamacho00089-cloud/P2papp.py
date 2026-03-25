@@ -44,7 +44,7 @@ else:
     # Esto sigue siendo lo que lee tu otra app
     st.code(f"VALOR_REAL|{precio_alto}|")
 
-st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
+st.info("Ahora estás viendo la tasa de 'Compra', que siempre es un poco más alta que la de 'Venta'.")
 # Al final de tu código de Python en GitHub:
 with open("tasa.txt", "w") as f:
     f.write(str(precio_alto))

@@ -38,6 +38,6 @@ else:
     st.error("Error de conexión con Binance")
 
 # Auto-refresco cada 2horas
-time.sleep(2hours)
+time.sleep(120)
 st.rerun()
 

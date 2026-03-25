@@ -46,10 +46,9 @@ else:
 
 st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
 # Al final de tu código de Streamlit:
-import json
-
-# Si entras a: https://p2pcalcular.streamlit.app/?api=techo
-query_params = st.query_params
-if query_params.get("api") == "techo":
-    st.write(f"VALOR_REAL|{precio_alto}|")
+# --- COPIA DESDE AQUÍ ---
+if st.query_params.get("api") == "techo":
+    st.code(f"VALOR_REAL|{precio_alto}|")
+    st.stop() 
+# --- HASTA AQUÍ ---
     # Esto ayuda a que el HTML lo encuentre más fácil

@@ -45,10 +45,8 @@ else:
     st.code(f"VALOR_REAL|{precio_alto}|")
 
 st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
-# Al final de tu código de Streamlit:
-# --- COPIA DESDE AQUÍ ---
-if st.query_params.get("api") == "techo":
-    st.code(f"VALOR_REAL|{precio_alto}|")
-    st.stop() 
-# --- HASTA AQUÍ ---
-    # Esto ayuda a que el HTML lo encuentre más fácil
+# Al final de tu código de Python en GitHub:
+with open("tasa.txt", "w") as f:
+    f.write(str(precio_alto))
+
+st.success(f"Tasa guardada en GitHub: {precio_alto}")

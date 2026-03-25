@@ -11,7 +11,7 @@ def obtener_p2p_alto():
     payload = {
         "asset": "USDT",
         "fiat": "VES",
-        "tradeType": "SELL", 
+        "tradeType": "BUY", 
         "bank": ["Banesco"],
         "rows": 1,
         "page": 1,

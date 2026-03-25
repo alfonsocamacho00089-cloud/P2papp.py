@@ -40,7 +40,7 @@ if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
     st.error(precio_alto)
 else:
     st.balloons()
-    st.success(f"### 🔥 PRECIO ALTO (SELL): {precio_alto} Bs.")
+    st.success(f"### 🔥 PRECIO ALTO (BUY): {precio_alto} Bs.")
     # Esto sigue siendo lo que lee tu otra app
     st.code(f"VALOR_REAL|{precio_alto}|")
 

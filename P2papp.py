@@ -7,7 +7,7 @@ st.title("📡 Antena Binance P2P (Precio Alto)")
 def obtener_p2p_alto():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
-    # SOLO CAMBIAMOS "BUY" por "SELL" para ver el precio más alto
+    # SOLO CAMBIAMOS "SELL" por "BUY" para ver el precio más alto
     payload = {
         "asset": "USDT",
         "fiat": "VES",

@@ -39,12 +39,12 @@ def obtener_p2p_alto():
 precio_alto = obtener_p2p_alto()
 hora_actual = (datetime.datetime.now() - datetime.timedelta(hours=4)).strftime("%I:%M:%S %p")
 if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
-    #st.error(precio_alto)
+    st.error(precio_alto)
 else:
     #st.balloons()
     #st.success(f"### 🔥 PRECIO ALTO (SELL): {precio_alto} Bs.")
     # Esto sigue siendo lo que lee tu otra app
-    #st.code(f"VALOR_REAL|{precio_alto}|")
+    st.code(f"VALOR_REAL|{precio_alto}|")
 
 #st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
 # Al final de tu código de Python en GitHub:

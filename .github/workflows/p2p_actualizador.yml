@@ -2,8 +2,8 @@ name: Actualizador de P2P Binance
 
 on:
   schedule:
-    # Se corre cada 30 minutos para mantener el P2P fresco
-    - cron: '*/30 * * * *'
+    # Se corre cada 18 minutos para mantener el P2P fresco
+    - cron: '*/18 9-23,0-4 * * *'
   workflow_dispatch: 
 
 jobs:

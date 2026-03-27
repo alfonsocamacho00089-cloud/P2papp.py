@@ -22,7 +22,7 @@ jobs:
         run: pip install requests
 
       - name: Correr Script P2P
-        run: python p2papp.py
+        run: python P2papp.py
 
       - name: Guardar cambios en el repo
         run: |

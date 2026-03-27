@@ -1,0 +1,33 @@
+name: Actualizador de P2P Binance
+
+on:
+  schedule:
+    # Se corre cada 30 minutos para mantener el P2P fresco
+    - cron: '*/30 * * * *'
+  workflow_dispatch: 
+
+jobs:
+  actualizar-p2p:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v2
+
+      - name: Instalar Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Instalar Requests
+        run: pip install requests
+
+      - name: Correr Script P2P
+        run: python p2papp.py
+
+      - name: Guardar cambios en el repo
+        run: |
+          git config --global user.name 'Robot-P2P'
+          git config --global user.email 'robot-p2p@github.com'
+          git add p2p.json
+          git commit -m "P2P actualizado" || echo "No hay cambios"
+          git push

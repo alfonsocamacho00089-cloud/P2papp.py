@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import datetime
+import json
+
 st.set_page_config(page_title="TuPropina P2P - Alto", page_icon="📡")
 st.title("📡 Antena Binance P2P (Precio Alto)")
 
@@ -47,8 +49,12 @@ else:
 
 st.info("Ahora estás viendo la tasa de 'Venta', que siempre es un poco más alta que la de 'Compra'.")
 # Al final de tu código de Python en GitHub:
-with open("tasa.txt", "w") as f:
-    f.write(str(precio_alto))
+
 
 st.success(f"Tasa guardada en GitHub: {precio_alto}")
 st.write(f"🕒 **Última actualización:** {hora_actual}")
+
+data_p2p = [{"banco": "Binance P2P", "precio": precio_alto}]
+
+with open("p2p.json", "w") as f:
+    json.dump(data_p2p, f)

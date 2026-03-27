@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
+
+      - name: Instalar Requests
+        run: pip install requests
       
       - name: Correr Script P2P
         run: python P2papp.py

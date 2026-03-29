@@ -57,7 +57,7 @@ else:
 #st.success(f"Tasa guardada en GitHub: {precio_alto}")
 #st.write(f"🕒 **Última actualización:** {hora_actual}")
 
-      data_p2p = [{"banco": "Binance P2P", "precio": precio_alto}]
+data_p2p = [{"banco": "Binance P2P", "precio": precio_alto}]
 
 with open("p2p.json", "w") as f:
     json.dump(data_p2p, f)

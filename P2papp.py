@@ -22,9 +22,13 @@ def obtener_p2p_alto():
 
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-            "Content-Type": "application/json"
+            # USAMOS EL LARGO (EL MEJOR)
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+            "Content-Type": "application/json",
+            "Referer": "https://p2p.binance.com/" # Este toque extra le dice que vienes de su propia web
         }
+        
+        # ... resto de tu código igual
         
         response = requests.post(url, json=payload, headers=headers, timeout=15)
         

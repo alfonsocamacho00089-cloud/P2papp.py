@@ -49,4 +49,4 @@ if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
 if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
     
    with open("p2p.json", "w") as f:
-    json.dump(data_p2p, f)
+    json.dump(P2p, f)

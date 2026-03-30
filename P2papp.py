@@ -52,7 +52,11 @@ if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
             json.dump(resultado, f, indent=4)
         
         # Cerramos bien la línea 53 con sus comillas y paréntesis
-        print(f"¡Actualizado con éxito! precio: {precio_alto}")
+   print(f"¡Actualizado con éxito! precio: {precio_alto}")
 
         # LINEA 54: La comentamos para que NO mande mensaje al celular
         # enviar_notificacion_precio(precio_alto)
+
+
+
+

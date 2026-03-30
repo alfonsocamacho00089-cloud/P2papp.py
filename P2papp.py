@@ -59,5 +59,7 @@ else:
 
  data_p2p = [{"banco": "Binance P2P", "precio": precio_alto}]
 
-with open("p2p.json", "w") as f:
+if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
+    
+   with open("p2p.json", "w") as f:
     json.dump(data_p2p, f)

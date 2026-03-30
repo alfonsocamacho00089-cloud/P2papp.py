@@ -43,8 +43,7 @@ def obtener_p2p_alto():
 
 precio_alto = obtener_p2p_alto()
 hora_actual = (datetime.datetime.now() - datetime.timedelta(hours=4)).strftime("%I:%M:%S %p")
-if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
-    st.error(precio_alto)
+print(f"Error detectado: {precio_alto}")
 else:
     #st.balloons()
     #st.success(f"### 🔥 PRECIO ALTO (SELL): {precio_alto} Bs.")

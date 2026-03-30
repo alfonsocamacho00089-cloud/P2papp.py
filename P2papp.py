@@ -53,10 +53,8 @@ if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
    print(f"¡Actualizado con éxito! precio: {precio_alto)
             enviar_notificacion_precio(precio, precio_alto)
 
-         else:
-            print("No se pududo capturar el precio.")
-
-    except Exception as e:
+else: print("No se pududo capturar el precio.")
+  except Exception as e:
         print(f"Error en la captura: {e}")
 
     capturar()

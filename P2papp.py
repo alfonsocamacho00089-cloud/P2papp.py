@@ -15,7 +15,7 @@ def obtener_p2p_alto():
         "fiat": "VES",
         "tradeType": "SELL",         
         "payTypes": ["Banesco"],
-        "transAmount": "220",
+        "transAmount": "500",
         "rows": 1,
         "page": 1,
         "publisherType":"merchant"

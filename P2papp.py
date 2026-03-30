@@ -48,7 +48,7 @@ if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
 
 if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
     
-   with open("Bcveuro_proxima.json", "w") as f:
+   with open("p2p.json", "w") as f:
                 json.dump([resultado[0]], f, indent=4)
             print(f"¡Actualizado con éxito! precio: {precio_alto)
             enviar_notificacion_precio(precio, precio_alto)

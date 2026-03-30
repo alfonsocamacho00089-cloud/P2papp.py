@@ -49,13 +49,10 @@ if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
 if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
     
    with open("p2p.json", "w") as f:
-                json.dump([resultado[0]], f, indent=4)
-   print(f"¡Actualizado con éxito! precio: {precio_alto)
-            enviar_notificacion_precio(precio, precio_alto)
+            json.dump(resultado, f, indent=4)
+        
+        # Cerramos bien la línea 53 con sus comillas y paréntesis
+        print(f"¡Actualizado con éxito! precio: {precio_alto}")
 
-else: print("No se pududo capturar el precio.")
-  except Exception as e:
-        print(f"Error en la captura: {e}")
-
-    capturar()
-
+        # LINEA 54: La comentamos para que NO mande mensaje al celular
+        # enviar_notificacion_precio(precio_alto)

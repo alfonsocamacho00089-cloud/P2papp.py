@@ -50,7 +50,7 @@ if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
     
    # Asegúrate de que estas líneas tengan la misma sangría (espacios a la izquierda)
         resultado = [{"bank": "Binance P2P", "precio": precio_alto}]
-    with open("p2p.json", "w") as f:
+        with open("p2p.json", "w") as f:
             json.dump(resultado, f, indent=4)
         
     print(f"¡Actualizado con éxito! precio: {precio_alto}")

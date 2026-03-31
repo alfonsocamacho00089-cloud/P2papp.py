@@ -1,1 +1,6 @@
-[{"banco": "Binance P2P", "precio": "Sin se\u00f1al: list index out of range"}]
+[
+    {
+        "bank": "Binance P2P",
+        "precio": "655.500"
+    }
+]

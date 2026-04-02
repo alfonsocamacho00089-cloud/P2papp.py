@@ -22,7 +22,7 @@ def obtener_p2p_alto():
             "tradeType": "SELL", 
             "payTypes": [banco],
             "transAmount": "500", # Monto bajo para captar tasas reales de usuarios comunes
-            "rows": 1,
+            "rows": 10,
             "page": 1,
             "publisherType": "merchant"
         }

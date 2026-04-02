@@ -35,12 +35,12 @@ def obtener_p2p_alto():
         
         if response.status_code == 200:
             res_json = response.json()
-            precio = res_json['data'][0]['adv']['price']
-            return precio
-        return f"Error: {response.status_code}"
-    except Exception as e:
-        return f"Sin señal: {e}"
-
+            if res_json.get('data'):
+                # Creamos una lista con los 10 precios que trajo Binance
+                lista_precios = [float(anuncio['adv']['price']) for anuncio in res_json['data']]
+                # De esos 10, elegimos el más alto (el máximo)
+                return max(lista_precios)
+            return "Sin anuncios"
 precio_alto = obtener_p2p_alto()
 hora_actual = (datetime.datetime.now() - datetime.timedelta(hours=4)).strftime("%I:%M:%S %p")
 if "Error" in str(precio_alto) or "Sin" in str(precio_alto):

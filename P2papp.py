@@ -9,7 +9,7 @@ def obtener_p2p_alto():
         "asset": "USDT",
         "fiat": "VES",
         "tradeType": "SELL",
-        "payTypes": ["Banesco"], 
+        "payTypes": ["Banesco","Mercantil"], 
         "transAmount": "500",
         "rows": 10,
         "page": 1,

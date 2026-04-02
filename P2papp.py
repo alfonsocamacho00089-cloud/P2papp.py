@@ -34,7 +34,8 @@ def obtener_p2p_alto():
                 # Verificamos que existan datos en la respuesta
                 if res_json.get('data') and len(res_json['data']) > 0:
                     precio = float(res_json['data'][0]['adv']['price'])
-                    precios_encontrados.append(precio)
+                    if precio > 640:
+                        precios_encontrados.append(precio)
         except Exception as e:
             print(f"Error consultando {banco}: {e}")
 
@@ -43,7 +44,7 @@ def obtener_p2p_alto():
         return max(precios_encontrados)
     else:
         return "Sin señal: No se encontraron anuncios"
-
+    
 # --- Lógica de actualización y guardado ---
 
 precio_alto = obtener_p2p_alto()

@@ -14,7 +14,7 @@ def obtener_p2p_alto():
     "asset": "USDT",
     "fiat": "VES",
     "tradeType": "SELL",  # "SELL" para ver cuánto pagan por tus USDT
-    "payTypes": ["Banesco","Pagomovil", "Mercantil"],
+    "payTypes": ["Banesco","],
     "transAmount": "500",    # Un monto más común (500 Bs) para captar tasas reales
     "rows": 1,
     "page": 1,

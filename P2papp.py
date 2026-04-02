@@ -14,7 +14,7 @@ def obtener_p2p_alto():
     "asset": "USDT",
     "fiat": "VES",
     "tradeType": "SELL",  # "SELL" para ver cuánto pagan por tus USDT
-    "payTypes": ["Pagomovil"], # "Rosneft" es el código interno para PAGO MÓVIL
+    "payTypes": ["Banesco"],
     "transAmount": "500",    # Un monto más común (500 Bs) para captar tasas reales
     "rows": 1,
     "page": 1,
@@ -44,12 +44,12 @@ def obtener_p2p_alto():
 precio_alto = obtener_p2p_alto()
 hora_actual = (datetime.datetime.now() - datetime.timedelta(hours=4)).strftime("%I:%M:%S %p")
 if "Error" in str(precio_alto) or "Sin" in str(precio_alto):
- data_p2p = [{"Pagomovil": "Binance P2P", "precio": precio_alto}]
+ data_p2p = [{"Bank": "Binance P2P", "precio": precio_alto}]
 
 if str(precio_alto) != str(json.load(open("p2p.json"))[0]["precio"]):
     
    # Asegúrate de que estas líneas tengan la misma sangría (espacios a la izquierda)
-        resultado = [{"Pagomovil": "Binance P2P", "precio": precio_alto}]
+        resultado = [{"Bank": "Binance P2P", "precio": precio_alto}]
         with open("p2p.json", "w") as f:
             json.dump(resultado, f, indent=4)
         print(f"¡Actualizado con éxito! precio: {precio_alto}")

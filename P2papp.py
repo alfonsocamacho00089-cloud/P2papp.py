@@ -28,7 +28,7 @@ def obtener_p2p_alto():
             res_json = response.json()
             if res_json.get('data') and len(res_json['data']) > 0:
                 # Extraemos los precios de los 10 anuncios
-                lista_precios = [float(anuncio['adv']['rate']) for anuncio in res_json['data']]
+                lista_precios = [float(anuncio['adv']['price']) for anuncio in res_json['data']]
                 # Retornamos el más alto de esos 10
                 return max(lista_precios)
             return "Sin anuncios"

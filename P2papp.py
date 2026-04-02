@@ -6,7 +6,7 @@ def obtener_p2p_alto():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
     # Lista de métodos que quieres consultar
-    metodos = ["Pagomóvil", "Banesco", "Mercantil"]
+    metodos = ["Banesco", "Mercantil"]
     precios_encontrados = []
 
     headers = {

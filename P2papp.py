@@ -11,14 +11,14 @@ def obtener_p2p_alto():
     
     # SOLO CAMBIAMOS "BUY" por "SELL" para ver el precio más alto
     payload = {
-        "asset": "USDT",
-        "fiat": "VES",
-        "tradeType": "SELL",         
-        "payTypes": ["Banesco"],
-        "transAmount": "50000",
-        "rows": 1,
-        "page": 1,
-        "publisherType":"merchant"
+    "asset": "USDT",
+    "fiat": "VES",
+    "tradeType": "SELL",  # "SELL" para ver cuánto pagan por tus USDT
+    "payTypes": ["Rosneft"], # "Rosneft" es el código interno para PAGO MÓVIL
+    "transAmount": "500",    # Un monto más común (500 Bs) para captar tasas reales
+    "rows": 1,
+    "page": 1,
+    "publisherType": "merchant"
     }
 
     try:

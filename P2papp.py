@@ -18,7 +18,7 @@ def obtener_binance():
         "payTypes": ["PagoMovil"],     # Filtro por Pago Móvil (Tasa Real)
         "publisherType": "merchant",  # Anunciantes profesionales
         "rows": 5,                    # Ver los primeros 5 para mayor liquidez
-        "tradeType": "BUY"           # Tasa de venta (la que usa el comercio)
+        "tradeType": "NELL"           # Tasa de venta (la que usa el comercio)
     }
     try:
         response = requests.post(url, json=payload, headers=HEADERS, timeout=20)

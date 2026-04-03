@@ -11,6 +11,7 @@ HEADERS = {
 def obtener_binance():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
+    # Filtramos por monto de 5.000 Bs para evitar las tasas de "ballenas"
     payload = {
         "asset": "USDT", 
         "fiat": "VES", 
@@ -18,18 +19,20 @@ def obtener_binance():
         "page": 1, 
         "payTypes": ["Banesco"], 
         "publisherType": None,
-        "rows": 5,           # Pedimos 5 para promediar y no depender de uno solo
-        "tradeType": "BUY",  # Usamos BUY porque queremos ver a cuánto nos VENDEN a nosotros
-        "transAmount": "5000" # <--- CLAVE: Filtra por un monto que la gente normal usa
+        "rows": 5,           # Traemos 5 para promediar
+        "tradeType": "BUY",  # "BUY" muestra lo que el usuario paga (la venta del cajero)
+        "transAmount": "5000" # <--- EL FILTRO MÁGICO
     }
     try:
         response = requests.post(url, json=payload, headers=HEADERS, timeout=20)
         if response.status_code == 200:
-            data = response.json()['data']
-            # Sacamos el promedio de los primeros 5 anuncios reales
-            precios = [float(adv['adv']['price']) for adv in data]
-            return sum(precios) / len(precios)
-    except: 
+            data = response.json().get('data', [])
+            if data:
+                # Sacamos el promedio de los primeros 5 anuncios reales
+                precios = [float(adv['adv']['price']) for adv in data]
+                return round(sum(precios) / len(precios), 2)
+    except Exception as e:
+        print(f"Error en Binance: {e}")
         return None
 
 def obtener_bybit():

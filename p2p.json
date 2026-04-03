@@ -1,6 +1,10 @@
-[
-    {
-        "bank": "Binance P2P",
-        "precio": 643.0
+{
+    "binance": {
+        "title": "Binance P2P",
+        "price": 650.001
+    },
+    "yadio": {
+        "title": "Yadio API",
+        "price": 649.34
     }
-]
+}

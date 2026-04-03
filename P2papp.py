@@ -12,15 +12,25 @@ def obtener_binance():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
     payload = {
-        "asset": "USDT", "fiat": "VES", "merchantCheck": False,
-        "page": 1, "payTypes": ["Banesco"], "publisherType": None,
-        "rows": 1, "tradeType": "SELL"
+        "asset": "USDT", 
+        "fiat": "VES", 
+        "merchantCheck": False,
+        "page": 1, 
+        "payTypes": ["Banesco"], 
+        "publisherType": None,
+        "rows": 5,           # Pedimos 5 para promediar y no depender de uno solo
+        "tradeType": "BUY",  # Usamos BUY porque queremos ver a cuánto nos VENDEN a nosotros
+        "transAmount": "5000" # <--- CLAVE: Filtra por un monto que la gente normal usa
     }
     try:
         response = requests.post(url, json=payload, headers=HEADERS, timeout=20)
         if response.status_code == 200:
-            return response.json()['data'][0]['adv']['price']
-    except: return None
+            data = response.json()['data']
+            # Sacamos el promedio de los primeros 5 anuncios reales
+            precios = [float(adv['adv']['price']) for adv in data]
+            return sum(precios) / len(precios)
+    except: 
+        return None
 
 def obtener_bybit():
     url = "https://api2.bybit.com/fiat/otc/item/list"

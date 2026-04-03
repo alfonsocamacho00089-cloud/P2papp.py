@@ -1,10 +1,10 @@
 {
     "binance": {
         "title": "Binance P2P",
-        "price": 650.001
+        "price": 650.5
     },
     "yadio": {
         "title": "Yadio API",
-        "price": 649.34
+        "price": 647.74
     }
 }

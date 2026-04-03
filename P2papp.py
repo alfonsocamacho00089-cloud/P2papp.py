@@ -11,9 +11,14 @@ HEADERS = {
 def obtener_binance():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     payload = {
-        "asset": "USDT", "fiat": "VES", "merchantCheck": False,
-        "page": 1, "payTypes": ["Banesco"], "publisherType": None,
-        "rows": 1, "tradeType": "SELL"
+        "asset": "USDT", 
+        "fiat": "VES", 
+        "merchantCheck": True,        # Solo comerciantes verificados
+        "page": 1, 
+        "payTypes": ["PagoMovil"],     # Filtro por Pago Móvil (Tasa Real)
+        "publisherType": "merchant",  # Anunciantes profesionales
+        "rows": 5,                    # Ver los primeros 5 para mayor liquidez
+        "tradeType": "SELL"           # Tasa de venta (la que usa el comercio)
     }
     try:
         response = requests.post(url, json=payload, headers=HEADERS, timeout=20)

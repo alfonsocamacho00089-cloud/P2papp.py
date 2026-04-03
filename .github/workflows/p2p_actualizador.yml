@@ -24,7 +24,7 @@ jobs:
           pip install requests 
       
       - name: Correr Script de Tasas
-        run: python Tasasapp.py
+        run: python P2papp.py
 
       - name: Guardar cambios en el repo
         run: |

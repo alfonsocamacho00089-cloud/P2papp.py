@@ -68,9 +68,9 @@ def actualizar_todo():
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:
-        with open('P2p.json', 'w', encoding='utf-8') as f:
+        with open('p2p.json', 'w', encoding='utf-8') as f:
             json.dump(datos_finales, f, indent=4, ensure_ascii=False)
-        print("💾 Archivo 'P2p.json' actualizado.")
+        print("💾 Archivo 'p2p.json' actualizado.")
     else:
         print("🚫 No se pudo obtener ninguna tasa.")
 

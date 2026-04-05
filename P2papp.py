@@ -18,7 +18,7 @@ def obtener_binance():
         "merchantCheck": True,
         "page": 1, 
         "payTypes": ["Banesco"], 
-        "publisherType": None,
+        "publisherType": merchant,
         "rows": 5,           # Traemos 5 para promediar
         "tradeType": "SELL",  # "BUY" muestra lo que el usuario paga (la venta del cajero)
         "transAmount": "5000" # <--- EL FILTRO MÁGICO

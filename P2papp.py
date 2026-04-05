@@ -20,7 +20,7 @@ def obtener_binance():
         "payTypes": ["Banesco"], 
         "publisherType": None,
         "rows": 5,           # Traemos 5 para promediar
-        "tradeType": "BUY",  # "BUY" muestra lo que el usuario paga (la venta del cajero)
+        "tradeType": "SELL",  # "BUY" muestra lo que el usuario paga (la venta del cajero)
         "transAmount": "5000" # <--- EL FILTRO MÁGICO
     }
     try:

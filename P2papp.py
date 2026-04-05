@@ -15,7 +15,7 @@ def obtener_binance():
     payload = {
         "asset": "USDT", 
         "fiat": "VES", 
-        "merchantCheck": False,
+        "merchantCheck": True,
         "page": 1, 
         "payTypes": ["Banesco"], 
         "publisherType": None,

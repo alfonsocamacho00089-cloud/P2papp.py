@@ -8,13 +8,24 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-
+def obtener_binance():
+    url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
+    payload = {
+        "asset": "USDT", "fiat": "VES", "merchantCheck": False,
+        "page": 1, "payTypes": ["Banesco"], "publisherType": None,
+        "rows": 1, "tradeType": "SELL"
+    }
+    try:
+        response = requests.post(url, json=payload, headers=HEADERS, timeout=20)
+        if response.status_code == 200:
+            return response.json()['data'][0]['adv']['price']
+    except: return None
 
 def obtener_bybit():
     url = "https://api2.bybit.com/fiat/otc/item/list"
     payload = {
         "tokenId": "USDT", "currencyId": "VES", 
-        "payment": ["Banesco"], "side": "0", 
+        "payment": ["Banesco"], "side": "1", 
         "size": "1", "page": "1"
     }
     try:
@@ -26,24 +37,34 @@ def obtener_bybit():
             return items[0]['price'] if items else None
     except: return None
 
-
+def obtener_yadio():
+    url = "https://api.yadio.io/json/VES"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=20)
+        if response.status_code == 200:
+            return response.json().get('USD', {}).get('rate')
+    except: return None
 
 def actualizar_todo():
     datos_finales = {}
     
     # Ejecutamos las consultas
-    
+    p_binance = obtener_binance()
     p_bybit = obtener_bybit()
-    
+    p_yadio = obtener_yadio()
 
     # Solo agregamos si hay respuesta exitosa
-    
+    if p_binance:
+        datos_finales["binance"] = {"title": "Binance P2P", "price": float(p_binance)}
+        print(f"✅ Binance cargado: {p_binance}")
 
     if p_bybit:
         datos_finales["bybit"] = {"title": "Bybit P2P", "price": float(p_bybit)}
         print(f"✅ Bybit cargado: {p_bybit}")
 
-    
+    if p_yadio:
+        datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
+        print(f"✅ Yadio cargado: {p_yadio}")
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:

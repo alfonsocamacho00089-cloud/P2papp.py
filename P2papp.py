@@ -13,11 +13,12 @@ HEADERS = {
 }
 
 
-def obtener_tasas_binance():
+def obtener_binance_escalonado():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
-    # Definimos directamente los montos que quieres consultar
-    rangos_activos = [10000, 100000]
+    # Definimos solo los dos montos que te interesan
+    montos_fijos = [10000, 100000]
+    resultados = {"compras_buy": {}, "ventas_sell": {}}
     # --- LÓGICA DE MONTOS (Ciclo) ---
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     for tipo in ["BUY", "SELL"]:
@@ -49,23 +50,27 @@ def obtener_yadio():
 def actualizar_todo():
     datos_finales = {}
     
-    # Obtenemos los datos de las APIs
-    binance_data = obtener_tasas_binance()
+    # Obtenemos los datos de las distintas fuentes
+    binance_data = obtener_binance_escalonado()
+    
     p_yadio = obtener_yadio()
 
-    if binance_data and (binance_data["compras_buy"] or binance_data["ventas_sell"]):
+    if binance_data:
         datos_finales["binance_p2p"] = binance_data
-        print(f"✅ Binance (10k y 100k) cargado exitosamente")
+        print("✅ Binance (10k y 100k) cargado")
 
     
-
+        
     
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
 
+    # Guardar si hay al menos un dato disponible
     if datos_finales:
+        datos_finales["ultima_actualizacion"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open('p2p.json', 'w', encoding='utf-8') as f:
             json.dump(datos_finales, f, indent=4, ensure_ascii=False)
+        print("🚀 Archivo p2p.json actualizado con éxito")
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:

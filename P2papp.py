@@ -22,7 +22,7 @@ def obtener_binance():
     except: return None
 
 def obtener_bybit():
-    url = "https://api2.bybit.com/fiat/otc/item/list"
+    url = "https://exchangemonitor.net/"
     payload = {
         "tokenId": "USDT", "currencyId": "VES", 
         "payment": ["Banesco"], "side": "1", 

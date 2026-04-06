@@ -3,8 +3,8 @@ name: Actualizar Tasas P2P
 on:
   schedule:
     # Corre cada 15 min (Horario Vzla aproximado)
-    - cron: '*/15 10-23 * * *'
-    - cron: '*/15 0-3 * * *'
+    - cron: '*/15 10-23,0-3 * * *'
+    
   workflow_dispatch:
 jobs:
   actualizar-p2p:

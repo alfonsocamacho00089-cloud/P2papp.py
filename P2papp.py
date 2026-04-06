@@ -67,12 +67,7 @@ def actualizar_todo():
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
 
-    # Guardar si hay al menos un dato disponible
-    if datos_finales:
-        datos_finales["ultima_actualizacion"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open('p2p.json', 'w', encoding='utf-8') as f:
-            json.dump(datos_finales, f, indent=4, ensure_ascii=False)
-        print("🚀 Archivo p2p.json actualizado con éxito")
+    
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:

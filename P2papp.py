@@ -1,5 +1,8 @@
 import requests
 import json
+import time
+from datetime import datetime
+import pytz
 
 # Headers reforzados para evitar bloqueos
 HEADERS = {
@@ -8,34 +11,42 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-def obtener_binance():
+def obtener_binance_escalonado():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
-    payload = {
-        "asset": "USDT", "fiat": "VES", "merchantCheck": False,
-        "page": 1, "payTypes": ["Banesco"], "publisherType": None,
-        "rows": 1, "tradeType": "BUY"
-    }
-    try:
-        response = requests.post(url, json=payload, headers=HEADERS, timeout=20)
-        if response.status_code == 200:
-            return response.json()['data'][0]['adv']['price']
-    except: return None
+    
+    # --- LÓGICA DE TIEMPO (pytz) ---
+    vzla_tz = pytz.timezone('America/Caracas')
+    ahora = datetime.now(vzla_tz)
+    h, m = ahora.hour, ahora.minute
 
-def obtener_bybit():
-    url = "https://exchangemonitor.net/"
-    payload = {
-        "tokenId": "USDT", "currencyId": "VES", 
-        "payment": ["Banesco"], "side": "1", 
-        "size": "1", "page": "1"
-    }
-    try:
-        # Bybit necesita los headers exactos para no dar 403
-        response = requests.post(url, json=payload, headers=HEADERS, timeout=20)
-        if response.status_code == 200:
-            res_json = response.json()
-            items = res_json.get('result', {}).get('items', [])
-            return items[0]['price'] if items else None
-    except: return None
+    rangos_activos = []
+    if h >= 6: rangos_activos.append(3000)
+    if (h == 6 and m >= 15) or h > 6: rangos_activos.append(5000)
+    if (h == 6 and m >= 30) or h > 6: rangos_activos.append(10000)
+    if (h == 6 and m >= 45) or h > 6: rangos_activos.append(50000)
+    if h >= 7: rangos_activos.append(100000)
+
+    if not rangos_activos: return None
+
+    # --- LÓGICA DE MONTOS (Ciclo) ---
+    resultados = {"compras_buy": {}, "ventas_sell": {}}
+    for tipo in ["BUY", "SELL"]:
+        for monto in rangos_activos:
+            payload = {
+                "asset": "USDT", "fiat": "VES", "merchantCheck": False,
+                "page": 1, "payTypes": ["Banesco"], "publisherType": None,
+                "rows": 1, "tradeType": tipo, "transAmount": str(monto)
+            }
+            try:
+                response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
+                if response.status_code == 200:
+                    precio = response.json()['data'][0]['adv']['price']
+                    clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
+                    resultados[clave][f"tasa_{monto}"] = float(precio)
+                time.sleep(1.2) 
+            except: continue
+    return resultados
+    
 
 def obtener_yadio():
     url = "https://api.yadio.io/json/VES"
@@ -48,23 +59,24 @@ def obtener_yadio():
 def actualizar_todo():
     datos_finales = {}
     
-    # Ejecutamos las consultas
-    p_binance = obtener_binance()
+    # Llamamos a la nueva función integrada
+    binance_data = obtener_binance_escalonado()
     p_bybit = obtener_bybit()
     p_yadio = obtener_yadio()
 
-    # Solo agregamos si hay respuesta exitosa
-    if p_binance:
-        datos_finales["binance"] = {"title": "Binance P2P", "price": float(p_binance)}
-        print(f"✅ Binance cargado: {p_binance}")
+    if binance_data:
+        datos_finales["binance_p2p"] = binance_data
+        print(f"✅ Binance detallado cargado")
 
     if p_bybit:
         datos_finales["bybit"] = {"title": "Bybit P2P", "price": float(p_bybit)}
-        print(f"✅ Bybit cargado: {p_bybit}")
-
+    
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
-        print(f"✅ Yadio cargado: {p_yadio}")
+
+    if datos_finales:
+        with open('p2p.json', 'w', encoding='utf-8') as f:
+            json.dump(datos_finales, f, indent=4, ensure_ascii=False)
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:

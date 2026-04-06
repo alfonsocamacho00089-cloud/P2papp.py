@@ -12,11 +12,11 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-def obtener_binance_escalonado():
+def obtener_tasas_binance():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
     # --- LÓGICA DE TIEMPO (pytz) ---
-    vzla_tz = pytz.timezone('America/Caracas')
+    
     ahora = datetime.now(vzla_tz)
     h, m = ahora.hour, ahora.minute
 
@@ -61,8 +61,7 @@ def actualizar_todo():
     datos_finales = {}
     
     # Llamamos a la nueva función integrada
-    binance_data = obtener_binance_escalonado()
-    
+    binance_data = obtener_tasas_binance()
     p_yadio = obtener_yadio()
 
     if binance_data:

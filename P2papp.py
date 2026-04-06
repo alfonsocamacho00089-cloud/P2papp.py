@@ -13,7 +13,7 @@ def obtener_binance():
     payload = {
         "asset": "USDT", "fiat": "VES", "merchantCheck": False,
         "page": 1, "payTypes": ["Banesco"], "publisherType": None,
-        "rows": 1, "tradeType": "SELL"
+        "rows": 1, "tradeType": "BUY"
     }
     try:
         response = requests.post(url, json=payload, headers=HEADERS, timeout=20)

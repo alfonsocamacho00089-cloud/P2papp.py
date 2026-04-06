@@ -3,7 +3,7 @@ import json
 import time
 from datetime import datetime
 import requests
-
+import random
 
 # Headers reforzados para evitar bloqueos
 HEADERS = {
@@ -36,7 +36,7 @@ def obtener_binance_escalonado():
                     precio = response.json()['data'][0]['adv']['price']
                     clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
                     resultados[clave][f"tasa_{monto}"] = float(precio)
-                time.sleep(1.2) 
+                time.sleep(random.uniform(1.5, 3.0)) 
             except: continue
     return resultados
     

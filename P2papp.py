@@ -22,7 +22,9 @@ def obtener_binance_escalonado():
     # --- LÓGICA DE MONTOS (Ciclo) ---
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     for tipo in ["BUY", "SELL"]:
-        for monto in rangos_activos:
+        
+        for monto in [10000, 100000]:
+            
             payload = {
                 "asset": "USDT", "fiat": "VES", "merchantCheck": True,
                 "page": 1, "payTypes": ["Banesco","Mercantil","Provincial","Tranferencia","PagoMovil"], "publisherType": "merchant",

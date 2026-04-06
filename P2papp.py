@@ -20,10 +20,10 @@ def obtener_binance_escalonado():
     h, m = ahora.hour, ahora.minute
 
     rangos_activos = []
-    if h >= 6: rangos_activos.append(3000)
-    if (h == 6 and m >= 15) or h > 6: rangos_activos.append(5000)
+    
+    
     if (h == 6 and m >= 30) or h > 6: rangos_activos.append(10000)
-    if (h == 6 and m >= 45) or h > 6: rangos_activos.append(50000)
+    
     if h >= 7: rangos_activos.append(100000)
 
     if not rangos_activos: return None

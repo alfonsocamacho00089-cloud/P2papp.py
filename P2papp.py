@@ -33,8 +33,8 @@ def obtener_binance_escalonado():
     for tipo in ["BUY", "SELL"]:
         for monto in rangos_activos:
             payload = {
-                "asset": "USDT", "fiat": "VES", "merchantCheck": False,
-                "page": 1, "payTypes": ["Banesco"], "publisherType": True,
+                "asset": "USDT", "fiat": "VES", "merchantCheck": True,
+                "page": 1, "payTypes": ["Banesco"]"Mercantil""provincial", "publisherType": None,
                 "rows": 1, "tradeType": tipo, "transAmount": str(monto)
             }
             try:

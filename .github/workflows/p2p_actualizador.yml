@@ -1,10 +1,29 @@
-name: Actualizador de Tasas Multi-Fuente
+name: Actualizar Tasas Escalonadas
 
 on:
   schedule:
-    - cron: '*/18 9-23,0-4 * * *'
-  workflow_dispatch: 
+    # Monto 3000: Corre cada 15 min desde 6:00 AM Vzla (10:00 UTC) hasta medianoche (04:00 UTC)
+    - cron: '*/15 10-23 * * *'
+    - cron: '*/15 0-3 * * *'
 
+    # Monto 5000: Corre cada 15 min desde 6:15 AM Vzla (10:15 UTC)
+    # Nota: Los crons de GitHub son fijos, para empezar 6:15 usamos esta lógica:
+    - cron: '15,30,45 10 * * *' # Solo el bloque de las 6:15 AM a 6:45 AM
+    - cron: '*/15 11-23 * * *' # De las 7 AM en adelante
+
+    # Monto 10000: Desde 6:30 AM Vzla (10:30 UTC)
+    - cron: '30,45 10 * * *'
+    - cron: '*/15 11-23 * * *'
+
+    # Monto 50000: Desde 6:45 AM Vzla (10:45 UTC)
+    - cron: '45 10 * * *'
+    - cron: '*/15 11-23 * * *'
+
+    # Monto 100000: Desde 7:00 AM Vzla (11:00 UTC)
+    - cron: '*/15 11-23 * * *'
+    - cron: '*/15 0-3 * * *'
+
+  workflow_dispatch: # Esto te permite darle al botón de "Play" manual desde el cel
 jobs:
   actualizar-p2p:
     runs-on: ubuntu-latest

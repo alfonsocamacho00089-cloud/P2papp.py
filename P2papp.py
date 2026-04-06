@@ -61,15 +61,15 @@ def actualizar_todo():
     
     # Llamamos a la nueva función integrada
     binance_data = obtener_binance_escalonado()
-    p_bybit = obtener_bybit()
+    
     p_yadio = obtener_yadio()
 
     if binance_data:
         datos_finales["binance_p2p"] = binance_data
         print(f"✅ Binance detallado cargado")
 
-    if p_bybit:
-        datos_finales["bybit"] = {"title": "Bybit P2P", "price": float(p_bybit)}
+    
+
     
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}

@@ -40,7 +40,7 @@ jobs:
 
       - name: Instalar Dependencias
         run: |
-          pip install requests 
+          pip install requests pytz
       
       - name: Correr Script de Tasas
         run: python P2papp.py

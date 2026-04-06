@@ -12,23 +12,12 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
+
 def obtener_tasas_binance():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     
-    # --- LÓGICA DE TIEMPO (pytz) ---
-    
-    ahora = datetime.now(vzla_tz)
-    h, m = ahora.hour, ahora.minute
-
-    rangos_activos = []
-    
-    
-    if (h == 6 and m >= 30) or h > 6: rangos_activos.append(10000)
-    
-    if h >= 7: rangos_activos.append(100000)
-
-    if not rangos_activos: return None
-
+    # Definimos directamente los montos que quieres consultar
+    rangos_activos = [10000, 100000]
     # --- LÓGICA DE MONTOS (Ciclo) ---
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     for tipo in ["BUY", "SELL"]:
@@ -60,13 +49,13 @@ def obtener_yadio():
 def actualizar_todo():
     datos_finales = {}
     
-    # Llamamos a la nueva función integrada
+    # Obtenemos los datos de las APIs
     binance_data = obtener_tasas_binance()
     p_yadio = obtener_yadio()
 
-    if binance_data:
+    if binance_data and (binance_data["compras_buy"] or binance_data["ventas_sell"]):
         datos_finales["binance_p2p"] = binance_data
-        print(f"✅ Binance detallado cargado")
+        print(f"✅ Binance (10k y 100k) cargado exitosamente")
 
     
 

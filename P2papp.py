@@ -27,7 +27,7 @@ def obtener_binance_escalonado():
             
             payload = {
                 "asset": "USDT", "fiat": "VES", "merchantCheck": True,
-                "page": 1, "payTypes": ["Banesco","Mercantil","Provincial","TransferenciaBancaria","PagoMovil","BanescoPanama","Bancaribe","Banplus","Bancamiga","BancoDeVenezuela","BNC"] "publisherType": "merchant",
+                "page": 1, "payTypes": ["Banesco", "Mercantil", "Provincial", "BancoDeVenezuela", "BNC", "Bancamiga", "PagoMovil", "TransferenciaBancaria", "Banplus", "Bancaribe"] "publisherType": "merchant",
                 "rows": 5, "tradeType": tipo, "transAmount": str(monto)
             }
             try:

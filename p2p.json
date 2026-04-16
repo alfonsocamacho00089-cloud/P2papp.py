@@ -1,16 +1,16 @@
 {
     "binance_p2p": {
         "compras_buy": {
-            "tasa_10000": 627.2,
-            "tasa_100000": 626.0
+            "tasa_10000": 628.5,
+            "tasa_100000": 625.0
         },
         "ventas_sell": {
-            "tasa_10000": 615.0,
-            "tasa_100000": 620.5
+            "tasa_10000": 618.013,
+            "tasa_100000": 621.018
         }
     },
     "yadio": {
         "title": "Yadio API",
-        "price": 620.43
+        "price": 621.74
     }
 }

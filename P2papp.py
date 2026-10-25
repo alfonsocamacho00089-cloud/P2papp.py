@@ -1,9 +1,8 @@
-import requests
 import json
+import random
 import time
 from datetime import datetime
 import requests
-import random
 
 # Headers reforzados para evitar bloqueos
 HEADERS = {
@@ -15,16 +14,10 @@ HEADERS = {
 
 def obtener_binance_escalonado():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
+    resultados = {"compras_buy": {}, "ventas_sell": {}}
     
-    # Definimos solo los dos montos que te interesan
-    montos_fijos = [10000, 100000]
-    resultados = {"compras_buy": {}, "ventas_sell": {}}
-    # --- LÓGICA DE MONTOS (Ciclo) ---
-    resultados = {"compras_buy": {}, "ventas_sell": {}}
     for tipo in ["BUY", "SELL"]:
-        
-        for monto in [10000, 100000]:
-            
+        for monto in:
             payload = {
                 "asset": "USDT", "fiat": "VES", "merchantCheck": True,
                 "page": 1, "payTypes": ["Banesco", "Mercantil", "Provincial", "BancoDeVenezuela", "BNC", "Bancamiga", "PagoMovil", "TransferenciaBancaria", "Banplus", "Bancaribe"], "publisherType": "merchant",
@@ -37,7 +30,8 @@ def obtener_binance_escalonado():
                     clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
                     resultados[clave][f"tasa_{monto}"] = float(precio)
                 time.sleep(random.uniform(1.5, 3.0)) 
-            except: continue
+            except: 
+                continue
     return resultados
     
 
@@ -47,8 +41,11 @@ def obtener_yadio():
         response = requests.get(url, headers=HEADERS, timeout=20)
         if response.status_code == 200:
             return response.json().get('USD', {}).get('rate')
-    except: return None
-        def obtener_binance_directo():
+    except: 
+        return None
+
+
+def obtener_binance_directo():
     url = "https://binance.com"
     try:
         response = requests.get(url, headers=HEADERS, timeout=10)
@@ -56,40 +53,30 @@ def obtener_yadio():
             for item in response.json().get('data', []):
                 if item.get('pair') == 'USDT_VES':
                     return float(item.get('price'))
-    except: return None
+    except: 
+        return None
 
 
 def actualizar_todo():
     datos_finales = {}
 
-# --- COPIA Y PEGA ESTAS LÍNEAS AQUÍ ---
+    # 1. Obtener tasa Binance Directo (Nuevo botón)
     p_binance_directo = obtener_binance_directo()
     if p_binance_directo:
         datos_finales["binance_directo"] = float(p_binance_directo)
         print("✅ Binance Directo cargado")
-    # --------------------------------------
 
-    # De aquí para abajo dejas tu código exactamente igual:
+    # 2. Obtener datos del P2P Escalonado
     binance_data = obtener_binance_escalonado()
-    p_yadio = obtener_yadio()
-    # ... (el resto de tu script sigue intacto)
-    
-    # Obtenemos los datos de las distintas fuentes
-    binance_data = obtener_binance_escalonado()
-    
-    p_yadio = obtener_yadio()
-
-    if binance_data:
+    if binance_data and (binance_data["compras_buy"] or binance_data["ventas_sell"]):
         datos_finales["binance_p2p"] = binance_data
         print("✅ Binance (10k y 100k) cargado")
-
     
-        
-    
+    # 3. Obtener datos de Yadio
+    p_yadio = obtener_yadio()
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
-
-    
+        print("✅ Yadio cargado")
 
     # Guardamos el archivo si conseguimos al menos una tasa
     if datos_finales:
@@ -99,5 +86,7 @@ def actualizar_todo():
     else:
         print("🚫 No se pudo obtener ninguna tasa.")
 
+
 if __name__ == "__main__":
     actualizar_todo()
+                

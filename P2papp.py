@@ -49,8 +49,33 @@ def obtener_yadio():
             return response.json().get('USD', {}).get('rate')
     except: return None
 
+def obtener_binance_directo():
+    url = "https://binance.com"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=10)
+        if response.status_code == 200:
+            for item in response.json().get('data', []):
+                if item.get('pair') == 'USDT_VES':
+                    return float(item.get('price'))
+    except: 
+        return None
+
+
+
+    
+
 def actualizar_todo():
     datos_finales = {}
+    
+    # Coloca los 4 espacios manuales al inicio de cada línea:
+    p_binance_directo = obtener_binance_directo()
+    if p_binance_directo:
+        datos_finales["binance_directo"] = float(p_binance_directo)
+        print("✅ Binance Directo cargado")
+
+    # De aquí hacia abajo continúa tu código idéntico:
+    
+
     
     # Obtenemos los datos de las distintas fuentes
     binance_data = obtener_binance_escalonado()

@@ -5,6 +5,7 @@ import random
 import statistics
 from datetime import datetime
 
+# Headers reforzados para evitar bloqueos
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "application/json",
@@ -18,6 +19,7 @@ BANCOS_VE = [
 ]
 
 def consultar_p2p(tipo, monto="", bancos=None, filas=10):
+    """Función auxiliar para consultar el libro de órdenes P2P de Binance."""
     url = "https://binance.com"
     payload = {
         "asset": "USDT",
@@ -34,13 +36,12 @@ def consultar_p2p(tipo, monto="", bancos=None, filas=10):
         response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
         if response.status_code == 200:
             return response.json().get('data', [])
-        else:
-            print(f"⚠️ Binance P2P respondió código {response.status_code} ({tipo})")
     except Exception as e:
-        print(f"⚠️ Error de conexión Binance P2P ({tipo}): {e}")
+        print(f"⚠️ Error consultando Binance P2P ({tipo} - monto: {monto}): {e}")
     return []
 
 def obtener_binance_unificado():
+    """Obtiene tanto el promedio estilo monitor como las tasas escalonadas reales."""
     datos_p2p = {
         "referencia_monitor": {},
         "ejecucion_real": {
@@ -49,14 +50,14 @@ def obtener_binance_unificado():
         }
     }
 
-    # 1. PROMEDIO ESTILO MONITOR
+    # 1. PROMEDIO ESTILO MONITOR (Sin filtro de monto, filtrando anuncios promocionados)
     for tipo in ["BUY", "SELL"]:
         anuncios = consultar_p2p(tipo=tipo, monto="", bancos=[], filas=10)
         precios_reales = []
         
         for item in anuncios:
             adv = item.get('adv', {})
-            if adv.get('privilegeType') is None:
+            if adv.get('privilegeType') is None:  # Ignora anuncios patrocinados
                 precios_reales.append(float(adv['price']))
             if len(precios_reales) == 5:
                 break
@@ -67,16 +68,17 @@ def obtener_binance_unificado():
         
         time.sleep(random.uniform(1.2, 2.2))
 
+    # Calculamos el punto medio entre Buy y Sell
     ref = datos_p2p["referencia_monitor"]
     if "compra_buy" in ref and "venta_sell" in ref:
         ref["promedio_general"] = round((ref["compra_buy"] + ref["venta_sell"]) / 2, 2)
 
-    # 2. TASAS REALES POR TRAMO (10.000 y 100.000)
-    montos = [10000, 100000]
+    # 2. TASAS REALES POR TRAMO (10.000 y 100.000 con tus bancos específicos)
     for tipo in ["BUY", "SELL"]:
-        for monto in montos:
+        for monto in:
             anuncios = consultar_p2p(tipo=tipo, monto=monto, bancos=BANCOS_VE, filas=5)
             
+            # Tomamos el primer anuncio real (no patrocinado) de ese tramo
             precio_tramo = None
             for item in anuncios:
                 adv = item.get('adv', {})
@@ -84,9 +86,9 @@ def obtener_binance_unificado():
                     precio_tramo = float(adv['price'])
                     break
             
-            if precio_tramo is None and len(anuncios) > 0:
-                primer_anuncio = anuncios.pop(0)
-                precio_tramo = float(primer_anuncio['adv']['price'])
+            # Respaldo por si todos los primeros fueran patrocinados
+            if precio_tramo is None and anuncios:
+                precio_tramo = float(anuncios[0]['adv']['price'])
 
             if precio_tramo:
                 clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
@@ -127,7 +129,6 @@ def obtener_binance_directo():
                     return float(data['price'])
         except:
             continue
-    print("⚠️ Binance Directo no devolvió datos")
     return None
 
 def actualizar_todo():

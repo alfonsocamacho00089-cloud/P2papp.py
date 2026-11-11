@@ -12,48 +12,28 @@ HEADERS = {
 }
 
 def obtener_binance_escalonado():
-    url = "https://binance.com"
+    url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     
     for tipo in ["BUY", "SELL"]:
-        payload = {
-            "asset": "USDT",
-            "fiat": "VES",
-            "merchantCheck": False,
-            "page": 1,
-            "payTypes": [],
-            "publisherType": None,
-            "rows": 15,
-            "tradeType": tipo,
-            "transAmount": ""
-        }
-        try:
-            response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
-            if response.status_code == 200:
-                anuncios = response.json().get('data', [])
-                
-                # Filtramos solo los anuncios patrocinados y tomamos los precios reales
-                precios = [
-                    float(item['adv']['price']) for item in anuncios 
-                    if item.get('adv', {}).get('privilegeType') is None
-                ]
-                
-                if precios:
-                    primeros_5 = precios[:5]
-                    ultimos_5 = precios[-5:]
-                    combinados = primeros_5 + ultimos_5
-                    
+        for monto in [10000, 100000]:
+            payload = {
+                "asset": "USDT", "fiat": "VES", "merchantCheck": True,
+                "page": 1, "payTypes": ["Banesco", "Mercantil", "Provincial", "BancoDeVenezuela", "BNC", "Bancamiga", "PagoMovil", "TransferenciaBancaria", "Banplus", "Bancaribe"], "publisherType": "merchant",
+                "rows": 5, "tradeType": tipo, "transAmount": str(monto)
+            }
+            try:
+                response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
+                if response.status_code == 200:
+                    precio = response.json()['data'][0]['adv']['price']
                     clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
-                    resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
-                    resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
-                    resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
-                    
-            time.sleep(random.uniform(1.5, 3.0)) 
-        except: continue
+                    resultados[clave][f"tasa_{monto}"] = float(precio)
+                time.sleep(random.uniform(1.5, 3.0)) 
+            except: continue
     return resultados
 
 def obtener_yadio():
-    url = "https://yadio.io"
+    url = "https://api.yadio.io/json/VES"
     try:
         response = requests.get(url, headers=HEADERS, timeout=20)
         if response.status_code == 200:
@@ -61,10 +41,13 @@ def obtener_yadio():
     except: return None
 
 def obtener_binance_directo():
-    url = "https://binance.com"
-    url_alt = "https://binance.com"
+    # Endpoint público de Binance para consultar el precio de referencia de conversión USDT/VES
+    url = "https://www.binance.com/bapi/asset/v1/public/asset-service/product/get-product-by-symbol?symbol=USDT_VES"
+    # URL alternativa de respaldo (Ticker general de precios de Binance)
+    url_alt = "https://api.binance.com/api/v3/ticker/price?symbol=USDTVES"
     
     try:
+        # Intentamos con la API de activos
         response = requests.get(url, headers=HEADERS, timeout=10)
         if response.status_code == 200:
             data = response.json()
@@ -76,6 +59,7 @@ def obtener_binance_directo():
         pass
 
     try:
+        # Si falla, probamos el ticker global de Binance v3
         response = requests.get(url_alt, headers=HEADERS, timeout=10)
         if response.status_code == 200:
             precio = response.json().get('price')
@@ -99,7 +83,7 @@ def actualizar_todo():
 
     if binance_data:
         datos_finales["binance_p2p"] = binance_data
-        print("✅ Binance P2P cargado")
+        print("✅ Binance P2P (10k y 100k) cargado")
         
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}

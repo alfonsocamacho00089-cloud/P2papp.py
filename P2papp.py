@@ -16,20 +16,28 @@ def obtener_binance_escalonado():
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     
     for tipo in ["BUY", "SELL"]:
-        for monto in [10000, 100000]:
-            payload = {
-                "asset": "USDT", "fiat": "VES", "merchantCheck": True,
-                "page": 1, "payTypes": ["Banesco", "Mercantil", "Provincial", "BancoDeVenezuela", "BNC", "Bancamiga", "PagoMovil", "TransferenciaBancaria", "Banplus", "Bancaribe"], "publisherType": "merchant",
-                "rows": 5, "tradeType": tipo, "transAmount": str(monto)
-            }
-            try:
-                response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
-                if response.status_code == 200:
-                    precio = response.json()['data'][0]['adv']['price']
+        payload = {
+            "asset": "USDT", "fiat": "VES", "merchantCheck": True,
+            "page": 1, "payTypes": ["Banesco", "Mercantil", "Provincial", "BancoDeVenezuela", "BNC", "Bancamiga", "PagoMovil", "TransferenciaBancaria", "Banplus", "Bancaribe"], "publisherType": "merchant",
+            "rows": 20, "tradeType": tipo, "transAmount": ""
+        }
+        try:
+            response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
+            if response.status_code == 200:
+                anuncios = response.json()['data']
+                precios = [float(item['adv']['price']) for item in anuncios]
+                
+                if precios:
+                    primeros_5 = precios[:5]
+                    ultimos_5 = precios[-5:]
+                    combinados = primeros_5 + ultimos_5
+                    
                     clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
-                    resultados[clave][f"tasa_{monto}"] = float(precio)
-                time.sleep(random.uniform(1.5, 3.0)) 
-            except: continue
+                    resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
+                    resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
+                    resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
+            time.sleep(random.uniform(1.5, 3.0)) 
+        except: continue
     return resultados
 
 def obtener_yadio():

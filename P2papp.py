@@ -1,10 +1,10 @@
 import requests
 import json
 import time
-import random
-import statistics
 from datetime import datetime
+import random
 
+# Headers reforzados para evitar bloqueos
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "application/json",
@@ -13,17 +13,17 @@ HEADERS = {
 
 def obtener_binance_escalonado():
     url = "https://binance.com"
-    resultados = {"compras_buy": 0, "ventas_sell": 0, "promedio_general": 0}
+    resultados = {"compras_buy": {}, "ventas_sell": {}}
     
     for tipo in ["BUY", "SELL"]:
         payload = {
             "asset": "USDT",
             "fiat": "VES",
-            "merchantCheck": True,
+            "merchantCheck": False,
             "page": 1,
             "payTypes": [],
-            "publisherType": "merchant",
-            "rows": 10,
+            "publisherType": None,
+            "rows": 15,
             "tradeType": tipo,
             "transAmount": ""
         }
@@ -31,29 +31,25 @@ def obtener_binance_escalonado():
             response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
             if response.status_code == 200:
                 anuncios = response.json().get('data', [])
-                precios_reales = []
                 
-                for item in anuncios:
-                    adv = item.get('adv', {})
-                    if adv.get('privilegeType') is None:
-                        precios_reales.append(float(adv['price']))
-                    if len(precios_reales) == 5:
-                        break
+                # Filtramos solo los anuncios patrocinados y tomamos los precios reales
+                precios = [
+                    float(item['adv']['price']) for item in anuncios 
+                    if item.get('adv', {}).get('privilegeType') is None
+                ]
                 
-                if precios_reales:
-                    clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
-                    resultados[clave] = round(statistics.mean(precios_reales), 2)
-            else:
-                print(f"⚠️ Binance P2P respondió código {response.status_code} ({tipo})")
+                if precios:
+                    primeros_5 = precios[:5]
+                    ultimos_5 = precios[-5:]
+                    combinados = primeros_5 + ultimos_5
                     
-            time.sleep(random.uniform(1.5, 2.5))
-        except Exception as e:
-            print(f"⚠️ Error en Binance P2P ({tipo}): {e}")
-            continue
-
-    if resultados["compras_buy"] > 0 and resultados["ventas_sell"] > 0:
-        resultados["promedio_general"] = round((resultados["compras_buy"] + resultados["ventas_sell"]) / 2, 2)
-        
+                    clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
+                    resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
+                    resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
+                    resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
+                    
+            time.sleep(random.uniform(1.5, 3.0)) 
+        except: continue
     return resultados
 
 def obtener_yadio():
@@ -62,9 +58,7 @@ def obtener_yadio():
         response = requests.get(url, headers=HEADERS, timeout=20)
         if response.status_code == 200:
             return response.json().get('USD', {}).get('rate')
-    except Exception as e:
-        print(f"⚠️ Error Yadio: {e}")
-    return None
+    except: return None
 
 def obtener_binance_directo():
     url = "https://binance.com"
@@ -93,10 +87,7 @@ def obtener_binance_directo():
     return None
 
 def actualizar_todo():
-    print("🚀 Iniciando actualización de tasas...")
-    datos_finales = {
-        "ultima_actualizacion": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+    datos_finales = {}
     
     p_binance_directo = obtener_binance_directo()
     if p_binance_directo:
@@ -106,20 +97,20 @@ def actualizar_todo():
     binance_data = obtener_binance_escalonado()
     p_yadio = obtener_yadio()
 
-    if binance_data["promedio_general"] > 0:
+    if binance_data:
         datos_finales["binance_p2p"] = binance_data
-        print("✅ Binance P2P promediado cargado")
+        print("✅ Binance P2P cargado")
         
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
-        print("✅ Yadio cargado")
 
-    if len(datos_finales) > 1:
+    if datos_finales:
         with open('p2p.json', 'w', encoding='utf-8') as f:
             json.dump(datos_finales, f, indent=4, ensure_ascii=False)
         print("💾 Archivo 'p2p.json' actualizado.")
     else:
-        print("🚫 No se pudo obtener ninguna tasa (posible bloqueo de IP en GitHub).")
+        print("🚫 No se pudo obtener ninguna tasa.")
 
 if __name__ == "__main__":
     actualizar_todo()
+    

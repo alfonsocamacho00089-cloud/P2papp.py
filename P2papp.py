@@ -113,4 +113,3 @@ def actualizar_todo():
 
 if __name__ == "__main__":
     actualizar_todo()
-    

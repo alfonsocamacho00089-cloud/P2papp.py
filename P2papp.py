@@ -8,8 +8,11 @@ import random
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "application/json",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    "Origin": "https://www.bybit.com",
+    "Referer": "https://www.bybit.com/"
 }
+
 
 def obtener_binance_escalonado():
     url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
@@ -81,14 +84,6 @@ def obtener_bybit_p2p():
     url = "https://bybit.com"
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     
-    # Cabeceras específicas que exige la web de Bybit
-    HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "Origin": "https://bybit.com",
-    "Referer": "https://bybit.com/"
-}
 
     lados = {"BUY": "1", "SELL": "0"}
     

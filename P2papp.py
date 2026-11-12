@@ -81,7 +81,7 @@ def obtener_binance_directo():
         
     return None
 def obtener_bybit_p2p():
-    url = "https://bybit.com/json/VES"
+    url = "https://bybit.com"
     try:
         response = requests.get(url, headers=HEADERS, timeout=20)
         if response.status_code == 200:

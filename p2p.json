@@ -3,16 +3,16 @@
         "compras_buy": {
             "primeros_5": 1078.14,
             "ultimos_5": 1078.99,
-            "promedio": 1078.56
+            "promedio": 1078.57
         },
         "ventas_sell": {
-            "primeros_5": 1077.2,
-            "ultimos_5": 1075.15,
-            "promedio": 1076.18
+            "primeros_5": 1077.02,
+            "ultimos_5": 1074.61,
+            "promedio": 1075.81
         }
     },
     "yadio": {
         "title": "Yadio API",
-        "price": 1071.818813
+        "price": 1072.86728
     }
 }

@@ -80,7 +80,7 @@ def obtener_binance_directo():
         pass
         
     return None
-def obtener_bybit_p2p():
+def obtener_bybit():
     url = "https://bybit.com/json/VES"
     try:
         response = requests.get(url, headers=HEADERS, timeout=20)
@@ -109,7 +109,7 @@ def actualizar_todo():
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
     
-    if bybit_p2p_data:
+    if bybit_data:
     
         datos_finales["bybit_p2p"] = {"title": "bybit_p2p", "price": float(p_bybit_p2p)}
         

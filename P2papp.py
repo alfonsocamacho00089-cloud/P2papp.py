@@ -77,7 +77,48 @@ def obtener_binance_directo():
         pass
         
     return None
-
+def obtener_bybit_p2p():
+    url = "https://bybit.com"
+    resultados = {"compras_buy": {}, "ventas_sell": {}}
+    
+    # En Bybit: "1" = Comprar USDT (Buy), "0" = Vender USDT (Sell)
+    lados = {"BUY": "1", "SELL": "0"}
+    
+    for tipo, side_code in lados.items():
+        payload = {
+            "userId": "",
+            "tokenId": "USDT",
+            "currencyId": "VES",
+            "payment": [],
+            "side": side_code,
+            "size": "20",
+            "page": "1",
+            "amount": "",
+            "authMaker": False,
+            "canTrade": False
+        }
+        try:
+            response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
+            if response.status_code == 200:
+                items = response.json().get('result', {}).get('items', [])
+                precios = [float(item['price']) for item in items if item.get('price')]
+                
+                if precios:
+                    primeros_5 = precios[:5]
+                    ultimos_5 = precios[-5:]
+                    combinados = primeros_5 + ultimos_5
+                    
+                    clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
+                    resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
+                    resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
+                    resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
+            time.sleep(random.uniform(1.5, 2.5))
+        except Exception as e:
+            print(f"⚠️ Error consultando Bybit ({tipo}): {e}")
+            continue
+            
+    return resultados
+    
 def actualizar_todo():
     datos_finales = {}
     
@@ -95,7 +136,12 @@ def actualizar_todo():
         
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
-
+    
+    bybit_data = obtener_bybit_p2p()
+    if bybit_data["compras_buy"] or bybit_data["ventas_sell"]:
+        datos_finales["bybit_p2p"] = bybit_data
+        print("✅ Bybit P2P cargado")
+    
     if datos_finales:
         with open('p2p.json', 'w', encoding='utf-8') as f:
             json.dump(datos_finales, f, indent=4, ensure_ascii=False)

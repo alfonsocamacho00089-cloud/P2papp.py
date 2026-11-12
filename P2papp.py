@@ -109,10 +109,10 @@ def actualizar_todo():
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
     
-    bybit_data = obtener_bybit_p2p()
-    if bybit_data["compras_buy"] or bybit_data["ventas_sell"]:
-        datos_finales["bybit_p2p"] = bybit_data
-        print("✅ Bybit P2P cargado")
+    bybit_data:
+    
+        datos_finales["bybit_p2p"] = {"title": "bybit_p2p", "price": float(p_bybit_p2p)}
+        
     
     if datos_finales:
         with open('p2p.json', 'w', encoding='utf-8') as f:

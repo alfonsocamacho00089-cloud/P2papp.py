@@ -82,10 +82,14 @@ def obtener_bybit_p2p():
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     
     # Cabeceras específicas que exige la web de Bybit
-    headers_bybit = HEADERS.copy()
-    headers_bybit["Origin"] = "https://bybit.com"
-    headers_bybit["Referer"] = "https://bybit.com/"
-    
+    HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "Origin": "https://bybit.com",
+    "Referer": "https://bybit.com/"
+}
+
     lados = {"BUY": "1", "SELL": "0"}
     
     for tipo, side_code in lados.items():

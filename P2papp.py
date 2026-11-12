@@ -81,13 +81,14 @@ def obtener_binance_directo():
         
     return None
 def obtener_bybit_p2p():
-    url = "https://bybit.com"
+    # 1. Intentamos con el dominio alternativo oficial de Bybit (bytick.com)
+    url_bybit = "https://bytick.com"
     payload = {
         "userId": "",
         "tokenId": "USDT",
         "currencyId": "VES",
         "payment": [],
-        "side": "1",  # "1" = Compra (Buy), "0" = Venta (Sell)
+        "side": "1",
         "size": "10",
         "page": "1",
         "amount": "",
@@ -95,15 +96,34 @@ def obtener_bybit_p2p():
         "canTrade": False
     }
     try:
-        response = requests.post(url, json=payload, headers=HEADERS, timeout=15)
+        response = requests.post(url_bybit, json=payload, headers=HEADERS, timeout=10)
         if response.status_code == 200 and response.text.strip():
             items = response.json().get('result', {}).get('items', [])
             precios = [float(item['price']) for item in items if item.get('price')]
             if precios:
                 return round(sum(precios) / len(precios), 2)
-        print(f"⚠️ Bybit respondió HTTP {response.status_code} (sin datos)")
+    except:
+        pass
+
+    # 2. Respaldo abierto sin bloqueo de IP (CriptoYa API - Venezuela)
+    try:
+        url_criptoya = "https://criptoya.com"
+        res = requests.get(url_criptoya, headers=HEADERS, timeout=10)
+        if res.status_code == 200:
+            data = res.json()
+            bybit_info = data.get('bybitp2p', {})
+            if bybit_info:
+                compra = bybit_info.get('ask')
+                venta = bybit_info.get('bid')
+                if compra and venta:
+                    return {
+                        "compras_buy": round(float(compra), 2),
+                        "ventas_sell": round(float(venta), 2),
+                        "promedio": round((float(compra) + float(venta)) / 2, 2)
+                    }
     except Exception as e:
-        print(f"⚠️ Error en Bybit: {e}")
+        print(f"⚠️ Error en respaldo CriptoYa: {e}")
+        
     return None
 
     

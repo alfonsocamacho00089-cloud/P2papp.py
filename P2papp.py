@@ -82,7 +82,7 @@ def obtener_binance_directo():
     return None
 def obtener_bybit_p2p():
     # 1. Intentamos con el dominio alternativo oficial de Bybit (bytick.com)
-    url_bybit = "https://bytick.com"
+    url_bybit = "https://ve.dolarapi.com"
     payload = {
         "userId": "",
         "tokenId": "USDT",
@@ -102,25 +102,8 @@ def obtener_bybit_p2p():
             precios = [float(item['price']) for item in items if item.get('price')]
             if precios:
                 return round(sum(precios) / len(precios), 2)
-    except:
-        pass
-
-    # 2. Respaldo abierto sin bloqueo de IP (CriptoYa API - Venezuela)
-    try:
-        url_criptoya = "https://criptoya.com"
-        res = requests.get(url_criptoya, headers=HEADERS, timeout=10)
-        if res.status_code == 200:
-            data = res.json()
-            bybit_info = data.get('bybitp2p', {})
-            if bybit_info:
-                compra = bybit_info.get('ask')
-                venta = bybit_info.get('bid')
-                if compra and venta:
-                    return {
-                        "compras_buy": round(float(compra), 2),
-                        "ventas_sell": round(float(venta), 2),
-                        "promedio": round((float(compra) + float(venta)) / 2, 2)
-                    }
+    
+    
     except Exception as e:
         print(f"⚠️ Error en respaldo CriptoYa: {e}")
         

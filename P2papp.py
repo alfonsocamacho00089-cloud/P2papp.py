@@ -82,11 +82,30 @@ def obtener_binance_directo():
     return None
 def obtener_bybit_p2p():
     url = "https://bybit.com"
+    payload = {
+        "userId": "",
+        "tokenId": "USDT",
+        "currencyId": "VES",
+        "payment": [],
+        "side": "1",  # "1" = Compra (Buy), "0" = Venta (Sell)
+        "size": "10",
+        "page": "1",
+        "amount": "",
+        "authMaker": False,
+        "canTrade": False
+    }
     try:
-        response = requests.get(url, headers=HEADERS, timeout=20)
-        if response.status_code == 200:
-            return response.json().get('USD', {}).get('rate')
-    except: return None
+        response = requests.post(url, json=payload, headers=HEADERS, timeout=15)
+        if response.status_code == 200 and response.text.strip():
+            items = response.json().get('result', {}).get('items', [])
+            precios = [float(item['price']) for item in items if item.get('price')]
+            if precios:
+                return round(sum(precios) / len(precios), 2)
+        print(f"⚠️ Bybit respondió HTTP {response.status_code} (sin datos)")
+    except Exception as e:
+        print(f"⚠️ Error en Bybit: {e}")
+    return None
+
     
 
 

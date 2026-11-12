@@ -109,7 +109,7 @@ def actualizar_todo():
     if p_yadio:
         datos_finales["yadio"] = {"title": "Yadio API", "price": float(p_yadio)}
     
-    bybit_data:
+    if bybit_data:
     
         datos_finales["bybit_p2p"] = {"title": "bybit_p2p", "price": float(p_bybit_p2p)}
         

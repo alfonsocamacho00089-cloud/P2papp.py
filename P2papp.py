@@ -81,7 +81,11 @@ def obtener_bybit_p2p():
     url = "https://bybit.com"
     resultados = {"compras_buy": {}, "ventas_sell": {}}
     
-    # En Bybit: "1" = Comprar USDT (Buy), "0" = Vender USDT (Sell)
+    # Cabeceras específicas que exige la web de Bybit
+    headers_bybit = HEADERS.copy()
+    headers_bybit["Origin"] = "https://bybit.com"
+    headers_bybit["Referer"] = "https://bybit.com/"
+    
     lados = {"BUY": "1", "SELL": "0"}
     
     for tipo, side_code in lados.items():
@@ -98,8 +102,8 @@ def obtener_bybit_p2p():
             "canTrade": False
         }
         try:
-            response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
-            if response.status_code == 200:
+            response = requests.post(url, json=payload, headers=headers_bybit, timeout=10)
+            if response.status_code == 200 and response.text.strip():
                 items = response.json().get('result', {}).get('items', [])
                 precios = [float(item['price']) for item in items if item.get('price')]
                 
@@ -112,12 +116,15 @@ def obtener_bybit_p2p():
                     resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
                     resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
                     resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
+            else:
+                print(f"⚠️ Bybit bloqueó la petición ({tipo}): HTTP {response.status_code}")
             time.sleep(random.uniform(1.5, 2.5))
         except Exception as e:
             print(f"⚠️ Error consultando Bybit ({tipo}): {e}")
             continue
             
     return resultados
+
     
 def actualizar_todo():
     datos_finales = {}

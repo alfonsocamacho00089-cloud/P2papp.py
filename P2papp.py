@@ -81,7 +81,7 @@ def obtener_binance_directo():
         
     return None
 def obtener_bybit_p2p():
-    url = "https://ve.dolarapi.com"
+    url = "https://www.usdt.com.ve/api/v1/rates/current"
     payload = {
         "userId": "",
         "tokenId": "USDT",

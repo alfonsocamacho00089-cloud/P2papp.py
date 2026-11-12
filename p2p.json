@@ -1,9 +1,9 @@
 {
     "binance_p2p": {
         "compras_buy": {
-            "primeros_5": 1077.88,
+            "primeros_5": 1077.87,
             "ultimos_5": 1079.0,
-            "promedio": 1078.44
+            "promedio": 1078.43
         },
         "ventas_sell": {
             "primeros_5": 1076.76,

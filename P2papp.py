@@ -81,47 +81,13 @@ def obtener_binance_directo():
         
     return None
 def obtener_bybit_p2p():
-    url = "https://bybit.com"
-    resultados = {"compras_buy": {}, "ventas_sell": {}}
-    lados = {"BUY": "1", "SELL": "0"}
+    url = "https://bybit.com/json/VES"
+    try:
+        response = requests.get(url, headers=HEADERS, timeout=20)
+        if response.status_code == 200:
+            return response.json().get('USD', {}).get('rate')
+    except: return None
     
-    for tipo, side_code in lados.items():
-        payload = {
-            "userId": "",
-            "tokenId": "USDT",
-            "currencyId": "VES",
-            "payment": [],
-            "side": side_code,
-            "size": "20",
-            "page": "1",
-            "amount": "",
-            "authMaker": False,
-            "canTrade": False
-        }
-        try:
-            response = requests.post(url, json=payload, headers=HEADERS, timeout=10)
-            if response.status_code == 200 and response.text.strip():
-                items = response.json().get('result', {}).get('items', [])
-                precios = [float(item['price']) for item in items if item.get('price')]
-                
-                if precios:
-                    primeros_5 = precios[:5]
-                    ultimos_5 = precios[-5:]
-                    combinados = primeros_5 + ultimos_5
-                    
-                    clave = "compras_buy" if tipo == "BUY" else "ventas_sell"
-                    resultados[clave]["primeros_5"] = round(sum(primeros_5) / len(primeros_5), 2)
-                    resultados[clave]["ultimos_5"] = round(sum(ultimos_5) / len(ultimos_5), 2)
-                    resultados[clave]["promedio"] = round(sum(combinados) / len(combinados), 2)
-            else:
-                print(f"⚠️ Bybit respondió HTTP {response.status_code} ({tipo})")
-            time.sleep(random.uniform(1.5, 2.5))
-        except Exception as e:
-            print(f"⚠️ Error consultando Bybit ({tipo}): {e}")
-            continue
-            
-    return resultados
-
 
 
     

@@ -1,18 +1,18 @@
 {
     "binance_p2p": {
         "compras_buy": {
-            "primeros_5": 1073.5,
-            "ultimos_5": 1074.99,
-            "promedio": 1074.25
+            "primeros_5": 1076.05,
+            "ultimos_5": 1077.15,
+            "promedio": 1076.6
         },
         "ventas_sell": {
-            "primeros_5": 1072.36,
-            "ultimos_5": 1071.3,
-            "promedio": 1071.83
+            "primeros_5": 1075.07,
+            "ultimos_5": 1074.02,
+            "promedio": 1074.55
         }
     },
     "yadio": {
         "title": "Yadio API",
-        "price": 1072.13873
+        "price": 1071.709006
     }
 }
